@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.cat.layout">
+          package="com.cat.fileoperator">
 
     <application
         android:allowBackup="true"
@@ -16,12 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".FrameActivity"></activity>
-        <activity android:name=".TableActivity"></activity>
-        <activity android:name=".RelativeActivity"></activity>
-        <activity android:name=".LinearLayoutActivity"></activity>
-        <activity android:name=".CalcActivity"></activity>
     </application>
 
 </manifest>
