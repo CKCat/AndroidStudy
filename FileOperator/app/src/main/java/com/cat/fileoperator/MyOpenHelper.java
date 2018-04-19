@@ -13,7 +13,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //创建一个id自动增长的person数据库
-        db.execSQL("create table person(_id integer primary key autoincrement, name char(10), salary char(10), phone integer(20))");
+        db.execSQL("create table person(_id integer primary key autoincrement, name char(10), salary char(10), phone char(20))");
     }
 
     //数据库升级时，会调用此方法
