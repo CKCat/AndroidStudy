@@ -19,9 +19,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 showhtml();
                 break;
             case R.id.btn_show_news:
-                Intent intent = new Intent(this, NesActivity.class);
+                Intent intent = new Intent(this, NewsActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -191,5 +193,70 @@ public class MainActivity extends AppCompatActivity {
     public String getFileName(String path){
         int index = path.lastIndexOf("/");
         return path.substring(index + 1);
+    }
+
+    void Get(String name, String pass){
+        //提交的数据需要经过url编码，英文和数字编码后不变
+        @SuppressWarnings("deprecation")
+        String path = "http://192.168.13.13/Web2/servlet/LoginServlet?name=" + URLEncoder.encode(name) + "&pass=" + pass;
+
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+
+            if(conn.getResponseCode() == 200){
+                InputStream is =conn.getInputStream();
+                String text = Utils.getTextFormStream(is);
+
+                Message msg = handler.obtainMessage();
+                msg.obj = text;
+                handler.sendMessage(msg);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    void Post(String name, String pass){
+        //提交的数据需要经过url编码，英文和数字编码后不变
+        @SuppressWarnings("deprecation")
+        String path = "http://192.168.13.13/Web2/servlet/LoginServlet";
+
+        try {
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+
+            //拼接出要提交的数据的字符串
+            String data = "name=" + URLEncoder.encode(name) + "&pass=" + pass;
+            //添加post请求的两行属性
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", data.length() + "");
+
+            //设置打开输出流
+            conn.setDoOutput(true);
+            //拿到输出流
+            OutputStream os = conn.getOutputStream();
+            //使用输出流往服务器提交数据
+            os.write(data.getBytes());
+            if(conn.getResponseCode() == 200){
+                InputStream is = conn.getInputStream();
+                String text = Utils.getTextFormStream(is);
+
+                Message msg = handler.obtainMessage();
+                msg.obj = text;
+                handler.sendMessage(msg);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }
